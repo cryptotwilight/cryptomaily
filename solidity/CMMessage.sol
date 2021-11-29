@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: Unlicensed
+// SPDX-License-Identifier: APACHE 2.0
 
 pragma solidity >=0.8.0 <0.9.0;
 
@@ -10,11 +10,15 @@ import "./IcmChainlinkOracle.sol";
 
 contract CMMessage is IcmReadMessage, IcmWriteMessage {
 
+    uint256 version = uint256(2); 
+
     address sender; 
     address denomination_erc20; 
     string denomination_symbol; 
     address recipient; 
     string ipfsMessageHash;
+    string subject; 
+
     mapping(string=>address) pouchByName;
     mapping(string=>string) attachmentByName;
 
@@ -46,31 +50,38 @@ contract CMMessage is IcmReadMessage, IcmWriteMessage {
         transferStatus = "DRAFT";
     }
 
-    function setMessageDenomination(address _erc20, string memory _symbol) external returns (string memory _symb){
+    function getVersion() external view returns (uint256 _version ){
+        return version; 
+    }
+
+
+    function setMessageDenomination(address _erc20, string memory _symbol) override external returns (string memory _symb){
         isLocked();
         denomination_erc20 = _erc20; 
         denomination_symbol = _symbol; 
         return denomination_symbol;
     }
 
-    function setRecipient(address _recipientAddress) external returns (address _recipient){
+    function setRecipient(address _recipientAddress)  override external returns (address _recipient){
         isLocked();
         recipient = _recipientAddress;
         return recipient;
     }
 
-    function setMessage(string memory _ipfsMessageHash) external returns (string memory _ipfsHash){
+    function setMessage(address _recipient, string memory _subject, string memory _ipfsMessageHash)  override external returns (bool _set){
         isLocked();
         ipfsMessageHash = _ipfsMessageHash;
-        return _ipfsHash;
+        subject = _subject;
+        recipient = _recipient; 
+        return true;
     }
 
-    function createPouch(string memory _name, address _pouchDenomination, string memory _pouchDenominationSymbol) external returns(address _pouchAddress){
+    function createPouch(string memory _name, address _pouchDenomination, string memory _pouchDenominationSymbol)  override external returns(address _pouchAddress){
         CMPouch pouch = new CMPouch(_name, address(this), sushiLiquidityPoolProvider, chainlinkOracleAddress, _pouchDenomination, _pouchDenominationSymbol);
         return address(pouch); // orphan pouch?
     }
 
-    function addPouch(address _pouchAddress) external returns (uint256 _pouchCount, uint256 _totalPouchValue, string memory _messageDenomination){
+    function addPouch(address _pouchAddress)  override external returns (uint256 _pouchCount, uint256 _totalPouchValue, string memory _messageDenomination){
         isLocked();
         IcmPouch pouch = IcmPouch(_pouchAddress);
 
@@ -100,10 +111,18 @@ contract CMMessage is IcmReadMessage, IcmWriteMessage {
        return (pouchList.length, pouchValueTotal, denomination_symbol);
     }
 
-    function addAttachment(string memory _attachmentName, string memory _ipfsAttachmentHash) external returns (uint256 _attachmentCount){
+    function addAttachment(string memory _attachmentName, string memory _ipfsAttachmentHash) override external returns (uint256 _attachmentCount){
         isLocked();
         attachmentByName[_attachmentName] = _ipfsAttachmentHash;
         return attachmentCount++;
+    }
+
+    function getPouchList() override view external returns (address [] memory _pouchList){
+        return pouchList; 
+    }
+
+    function getAttachmentList() override view external returns (string [] memory _attachmentNames, string [] memory _ipfsAttachmentHashs){
+        return (attachmentNames, attachmentHashes);
     }
 
     function getTransferStatus() external view returns (string memory _transferStatus){
@@ -116,6 +135,10 @@ contract CMMessage is IcmReadMessage, IcmWriteMessage {
 
     function getSender() external view returns (address _sender){
         return sender; 
+    }
+
+    function getSubject() external view returns(string memory _subject) {
+        return subject; 
     }
 
     function getMessage() external view returns (string memory _ipfsMessageHash){
@@ -138,7 +161,7 @@ contract CMMessage is IcmReadMessage, IcmWriteMessage {
     }
 
     function isLocked() view internal returns (bool) { 
-        require(locked, "message is locked");
+        require(!locked, "message is locked");
         return locked; 
     }
 

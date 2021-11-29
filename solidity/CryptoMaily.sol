@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: Unlicensed
+// SPDX-License-Identifier:  APACHE 2.0
 
 pragma solidity >=0.8.0 <0.9.0;
 
@@ -6,6 +6,8 @@ import "./ICryptoMaily.sol";
 import "./CMMessage.sol";
 
 contract CryptoMaily is ICryptoMaily {
+
+    uint256 version = uint256(2) ; 
 
     struct MailBox {
 
@@ -27,19 +29,21 @@ contract CryptoMaily is ICryptoMaily {
     address chainlinkOracleAddress;
     address sushiLiquidityPoolProviderAddress; 
 
-    mapping(address=>CMMessage) messageByMessageAddress; 
-
     constructor(address _administrator, address _chainlinkOracleAddress, address _sushiLiquidityPoolProviderAddress) {
         administrator = _administrator; 
         chainlinkOracleAddress = _chainlinkOracleAddress;
         sushiLiquidityPoolProviderAddress = _sushiLiquidityPoolProviderAddress; 
     }
 
+    function getVersion() view external returns (uint256 _v){
+        return version; 
+    }
+
     function getConfig() view external returns (address _chainLink, address _sushi, address _administrator, uint256 _mailboxCount){
         return (chainlinkOracleAddress, sushiLiquidityPoolProviderAddress, administrator, mailboxCount);
     }
 
-    function getInboxMail() view external returns (address [] memory _messageAddresses){
+    function getAllInboxMail() view external returns (address [] memory _messageAddresses){
         MailBox storage mailbox = mailBoxByAddress[msg.sender];
         return mailbox.recieved; 
     }
@@ -70,7 +74,7 @@ contract CryptoMaily is ICryptoMaily {
     }
 
     function sendMessage(address _messageAddress) external returns (string memory _sendStatus){
-        CMMessage message = messageByMessageAddress[_messageAddress];
+        CMMessage message = CMMessage(_messageAddress);
         message.lock(); 
               
         MailBox storage mailbox = mailBoxByAddress[message.getRecipient()];

@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: Unlicensed
+// SPDX-License-Identifier:  APACHE 2.0
 
 pragma solidity >=0.8.0 <0.9.0;
 
@@ -10,6 +10,8 @@ interface IcmReadMessage {
     function getRecipient() external view returns (address _recipient);
 
     function getSender() external view returns (address _sender);
+
+    function getSubject() external view returns (string memory _subject); 
 
     function getMessage() external view returns (string memory _ipfsMessageHash);
 

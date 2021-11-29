@@ -1,11 +1,10 @@
-// SPDX-License-Identifier: Unlicensed
-
+// SPDX-License-Identifier:  APACHE 2.0
 pragma solidity >=0.8.0 <0.9.0;
 
 
 interface ICryptoMaily { 
 
-    function getInboxMail() view external returns (address [] memory _messageAddresses);
+    function getAllInboxMail() view external returns (address [] memory _messageAddresses);
     
     function getInboxMail(uint256 _dateMillis) external view returns (address [] memory _messageAddresses);
 

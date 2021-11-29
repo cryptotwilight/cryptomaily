@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: Unlicensed
+// SPDX-License-Identifier:  APACHE 2.0
 
 pragma solidity >=0.8.0 <0.9.0;
 
@@ -9,6 +9,8 @@ import "./IERC20.sol";
 
 
 contract CMPouch is IcmPouch {
+
+    uint256 version = uint256(2);
 
     IcmSushiLiquidityPoolProvider sushi; 
     IcmChainlinkOracle chainlink;
@@ -50,6 +52,10 @@ contract CMPouch is IcmPouch {
 
     }
 
+    function getVersion() external view returns (uint256 _version) {
+        return version;  
+    }
+
     function getCreator() external view returns (address _pouchCreatorAddress){
         return creator; 
     }
@@ -85,6 +91,7 @@ contract CMPouch is IcmPouch {
         }
         
         erc20List.push(erc20);
+        erc20AddressList.push(_erc20);
 
         if (_erc20 == pouchDenomination){
             pouchFundsTotal += _funds;
