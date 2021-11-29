@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Crypto Maily</title>
+    <!-- base:css -->
+    <link rel="stylesheet" href="vendors/mdi/css/materialdesignicons.min.css">
+    <link rel="stylesheet" href="vendors/css/vendor.bundle.base.css">
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+
+
+    <!-- endinject -->
+    <!-- plugin css for this page -->
+    <!-- End plugin css for this page -->
+    <!-- inject:css -->
+    <link rel="stylesheet" href="css/style.css">
+    <!-- endinject -->
+    <link rel="shortcut icon" href="images/favicon.png" />
+
+    <script src="https://unpkg.com/ipfs-http-client-lite/dist/index.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script src="https://cdn.ethers.io/lib/ethers-5.0.umd.min.js" type="text/javascript">
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
+
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/ethjs@0.3.4/dist/ethjs.min.js"></script>
+    <script type="text/javascript" src="abi/ICryptoMaily.js"></script>
+    <script type="text/javascript" src="abi/IcmPouch.js"></script>
+    <script type="text/javascript" src="abi/IcmWriteMessage.js"></script>
+    <script type="text/javascript" src="abi/IERC20.js"></script>
+
+</head>
+
+<body>
+    <div class="container-scroller d-flex">
+        <!-- partial:./partials/_sidebar.html -->
+        <nav class="sidebar sidebar-offcanvas" id="sidebar">
+            <ul class="nav">
+                <li class="nav-item sidebar-category">
+                    <p>Navigation</p>
+                    <span></span>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="index.html">
+                        <i class="mdi mdi-view-quilt menu-icon"></i>
+                        <span class="menu-title">Inbox</span>
+                        <div class="badge badge-info badge-pill">2</div>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="index.html">
+                        <i class="fa fa-pen-alt menu-icon"></i>
+                        <span class="menu-title">Compose</span>
+                    </a>
+                </li>
+
+            </ul>
+        </nav>
+        <!-- partial -->
+        <div class="container-fluid page-body-wrapper">
+            <!-- partial:./partials/_navbar.html -->
+            <nav class="navbar col-lg-12 col-12 px-0 py-0 py-lg-4 d-flex flex-row">
+                <div class="navbar-menu-wrapper d-flex align-items-center justify-content-end">
+                    <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize" />
+                    <span class="mdi mdi-menu"></span>
+                    </button>
+                    <div class="navbar-brand-wrapper">
+                        <a class="navbar-brand brand-logo" href="index.html"><img src="images/logo.svg" alt="logo" /></a>
+                        <a class="navbar-brand brand-logo-mini" href="index.html"><img src="images/logo-mini.svg" alt="logo" /></a>
+                    </div>
+                    <h4 class="font-weight-bold mb-0 d-none d-md-block mt-1" style="color: black;">Crypto Maily</h4>
+                    <ul class="navbar-nav navbar-nav-right">
+                        <li>
+                            <span id="show_wallet"></span>
+                        </li>
+                        <li class="nav-item">
+                            <h4 class="mb-0 font-weight-bold d-none d-xl-block">
+                                <button type="button" class="btn btn-primary btn-rounded btn-fw" id="connect_web_3">Connect Web 3</button></h4>
+                        </li>
+                    </ul>
+                    <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-toggle="offcanvas">
+            <span class="mdi mdi-menu"></span>
+          </button>
+                </div>
+
+            </nav>
+            <!-- partial -->
+            <div class="main-panel">
+                <div class="content-wrapper">
+
+                    <div class="row">
+                        <div class="col-lg-12 grid-margin stretch-card">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h2 class="card-title">Compose</h2>
+                                    <div class="table-responsive">
+                                        <table class="table table-striped">
+
+                                            <tbody>
+                                                <tr>
+                                                    <td colspan="4" style="align-content: center;"><button id="create_message" class="btn btn-danger btn-rounded btn-fw">Create Message</button></td>
+                                                    <td><span id="show_message_address"></span></td>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="4">
+
+                                                        <table>
+                                                            <tr>
+                                                                <td>Recipient:</td>
+                                                                <td><input type="text" id="message_recipient" /></td>
+                                                                <td>Subject:</td>
+                                                                <td><input type="text" id="message_subject" /></td>
+                                                            </tr>
+                                                        </table>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="4">
+                                                        <div id="editor">
+                                                            <p>Hello World!</p>
+                                                            <p>Some initial <strong>bold</strong> text</p>
+                                                            <p><br></p>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr valign="top">
+                                                    <td valign="top">
+                                                        <h4>Attach Pouch</h4>
+
+                                                        <table>
+
+                                                            <tr>
+                                                                <td>Set Pouch Name</td>
+                                                                <td><input type="text" id="pouch_name" /></td>
+
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Select LP Provider</td>
+
+                                                                <td>
+                                                                    <select class="form-control form-control-lg" id="pouch_liquidity_provider">
+                                                                        <option value="SUSHI_SWAP">SUSHI SWAP</option>
+
+                                                                    </select>
+                                                                </td>
+                                                                <td></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Select Pouch Denomination</td>
+                                                                <td>
+                                                                    <select class="form-control form-control-lg" id="pouch_currency">
+                                                                        <option value="USDC">USDC</option>
+                                                                        <option value="USDT">USDT</option>
+                                                                        <option value="ETH">ETH</option>
+                                                                        <option value="DAI">DAI</option>
+                                                                    </select>
+                                                                </td>
+                                                                <td></td>
+                                                            </tr>
+
+                                                            <tr>
+                                                                <td>
+                                                                </td>
+                                                                <td>
+                                                                    <center><button type="button" class="btn btn-danger btn-rounded btn-fw" id="create_pouch">Create Pouch</button></center>
+                                                                </td>
+                                                                <td></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Pouch Address</td>
+                                                                <td><span id="show_pouch_address"></span></td>
+                                                                <td></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Pouch Total</td>
+                                                                <td><span id="show_pouch_total"></span></td>
+                                                                <td><span id="show_pouch_denomination"></span></td></td>
+                                                            </tr>
+                                                            <tr>
+
+                                                                <td>Select Funds To Add</td>
+
+                                                                <td>
+                                                                    <select class="form-control form-control-lg" id="pouch_currency">
+                                                                        <option value="USDC">USDC</option>
+                                                                        <option value="USDT">USDT</option>
+                                                                        <option value="ETH">ETH</option>
+                                                                        <option value="DAI">DAI</option>
+                                                                    </select>
+                                                                </td>
+
+                                                                <td>
+                                                                    <button type="button" class="btn btn-warning btn-rounded btn-sm btn-fw" id="approve_pouch_coin">Approve Pouch For Coin</button>
+                                                                </td>
+                                                            </tr>
+
+                                                            <tr>
+                                                                <td>
+                                                                    Enter Amount
+                                                                </td>
+                                                                <td>
+                                                                    <div class="form-group">
+                                                                        <div class="input-group">
+                                                                            <div class="input-group-prepend">
+                                                                                <span class="input-group-text">$</span>
+                                                                            </div>
+                                                                            <input type="text" class="form-control" aria-label="coin amount ...." />
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
+
+                                                                <td>
+                                                                    <button type="button" class="btn btn-danger btn-rounded btn-sm btn-fw" id="approve_pouch_coin">Add Funds to Pouch</button>
+                                                                </td>
+
+                                                            </tr>
+                                                            <tr>
+
+                                                                <td>
+
+                                                                </td>
+                                                                <td>
+                                                                    <center><button type="button" class="btn btn-danger btn-rounded btn-fw" id="attach_pouch">Attach Pouch</button></center>
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+                                                    </td>
+                                                    <td style="vertical-align: top;">
+                                                        <h4>Attached Pouches</h4>
+                                                        <table id="attached_pouch_table">
+                                                            <tr>
+                                                                <th>Pouch Name</th>
+                                                                <th>Pouch Address</th>
+                                                                <th>Pouch Value</th>
+                                                                <th>Pouch Coin</th>
+                                                            </tr>
+                                                        </table>
+
+                                                    </td>
+
+                                                    <td style="vertical-align: top;">
+                                                        <h4>Attached Attachments</h4>
+                                                        <table id="attachment_table">
+                                                            <tr>
+                                                                <th>Filename</th>
+                                                                <th>IPFS Location</th>
+                                                            </tr>
+                                                        </table>
+                                                    </td>
+
+                                                    <td style="vertical-align: top;">
+                                                        <h4>Attach Files</h4>
+                                                        <table>
+                                                            <tr>
+                                                                <td>
+                                                                    <input type="file" class="btn btn-primary btn-rounded btn-fw" id="attachment_select" />
+                                                                    <br/>&nbsp;
+
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>
+                                                                    <button type="input" class="btn btn-warning btn-rounded btn-fw" id="upload_and_attach">Upload & Attach</button>
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+                                                    </td>
+
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- row end -->
+
+
+
+
+                    <div class=" row ">
+                        <div class="col-lg-12 grid-margin stretch-card">
+                            <div class="card">
+                                <div class="card-body" align="center">
+
+                                    <table>
+                                        <tr>
+                                            <td><button type="button" class="btn btn-primary btn-rounded btn-fw" id="send_message">Send</button></td>
+                                        </tr>
+
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+                <!-- content-wrapper ends -->
+                <!-- partial:./partials/_footer.html -->
+                <footer class="footer ">
+                    <div class="card ">
+                        <div class="card-body ">
+                            <div class="d-sm-flex justify-content-center justify-content-sm-between ">
+                                <span class="text-muted d-block text-center text-sm-left d-sm-inline-block ">Copyright © Crypto Maily 2021</span>
+                            </div>
+                        </div>
+                    </div>
+                </footer>
+                <!-- partial -->
+            </div>
+            <!-- main-panel ends -->
+        </div>
+        <!-- page-body-wrapper ends -->
+    </div>
+    <!-- container-scroller -->
+
+    <!-- Include the Quill library -->
+    <script src="https://cdn.quilljs.com/1.3.6/quill.js "></script>
+
+    <!-- Initialize Quill editor -->
+    <script>
+        var quill = new Quill('#editor', {
+            theme: 'snow'
+        });
+    </script>
+
+    <!-- base:js -->
+    <script src="vendors/js/vendor.bundle.base.js "></script>
+    <!-- endinject -->
+    <!-- Plugin js for this page-->
+    <script src="vendors/chart.js/Chart.min.js "></script>
+    <!-- End plugin js for this page-->
+    <!-- inject:js -->
+    <script src="js/off-canvas.js "></script>
+    <script src="js/hoverable-collapse.js "></script>
+    <script src="js/template.js "></script>
+    <!-- endinject -->
+    <!-- plugin js for this page -->
+    <!-- End plugin js for this page -->
+    <!-- Custom js for this page-->
+    <script src="js/dashboard.js "></script>
+    <!-- End custom js for this page-->
+    <script>
+
+        const coinAddressByCoin = new Map();
+
+        coinAddressByCoin.set("USDC", "0xA7D7079b0FEaD91F3e65f86E8915Cb59c1a4C664");
+        coinAddressByCoin.set("USDT", "0xc7198437980c041c805A1EDcbA50c1Ce5db95118");
+        coinAddressByCoin.set("ETH", "0xf20d962a6c8f70c731bd838a3a388D7d48fA6e15");
+        coinAddressByCoin.set("DAI", "0xbA7dEebBFC5fA1100Fb055a87773e1E99Cd3507a");
+
+        const onboardButton = document.getElementById("connect_web_3");
+
+        console.log("onboard button : " + onboardButton);
+
+        const showWallet = document.getElementById("show_wallet");
+
+        const createMessageButton = document.getElementById("create_message");
+        const showMessageAddress = document.getElementById("show_message_address");
+
+        const recipient = document.getElementById("message_recipient");
+        const subject = document.getElementById("message_subject");
+
+        const messageBody = quill.getContents();
+
+        const pouchName = document.getElementById("pouch_name");
+
+        const showPouchAddress = document.getElementById("show_pouch_address");
+        const showPouchTotal = document.getElementById("show_pouch_total");
+        const showPouchDenomination = document.getElementById("show_pouch_denomination");
+
+        const createPouchButton = document.getElementById("create_pouch");
+
+        const pouchCoinSelect = document.getElementById("pouch_coin");
+        const pouchLiquidityProvider = document.getElementById("pouch_liquidity_provider");
+        const pouchAmount = document.getElementById("pouch_amount");
+
+        const approvePouchButton = document.getElementById("approve_pouch_coin");
+
+        const attachPouchButton = document.getElementById("attach_pouch");
+
+        const attachedPouchTable = document.getElementById("attached_pouch_table");
+
+        const attachmentName = document.getElementById("attachment_name");
+        const attachmentFile = document.getElementById("attachment_file");
+        const attachSelectButton = document.getElementById("attachment_select");
+        const uploadAndAttachButton = document.getElementById("upload_and_attach");
+
+        const attachmentTable = document.getElementById("attachment_table");
+
+        const sendButton = document.getElementById("send_message");
+
+        const icryptoMailyAddress = "0x5D385910EF284C445cFe60F922CC70C67596Dd00";// local
+        //const icryptoMailyAddress = "0xE078D1805884f0c2f83C833c38DD1837cb248c7F"; //Avalanche FuJI
+        //const icryptoMailyAddress = ""; // BSC
+        //const icryptoMailyAddress = "0xE078D1805884f0c2f83C833c38DD1837cb248c7F"; // HECO
+
+        const ipfs = window.IpfsHttpClientLite('http://localhost:5001')
+        const buffer = window.IpfsHttpClientLite.Buffer;
+
+        console.log("buffer :: " + buffer);
+
+        console.log("got ipfs: " + ipfs);
+
+        const web3 = new Web3(ethereum);
+        console.log("web3 : " + web3);
+
+        var icryptoMailyContract;
+
+        var account;
+
+        var currentMessage;
+
+        //Created check function to see if the MetaMask extension is installed
+        const isMetaMaskInstalled = () => {
+
+            const {
+                ethereum
+            } = window;
+            return Boolean(ethereum && ethereum.isMetaMask);
+        };
+
+        const MetaMaskClientCheck = () => {
+            //Now we check to see if Metmask is installed
+            if (!isMetaMaskInstalled()) {
+                console.log("metamask not installed");
+                //If it isn't installed we ask the user to click to install it
+                onboardButton.innerText = 'Click here to install MetaMask!';
+                //When the button is clicked we call this function
+                onboardButton.onclick = onClickInstall;
+                //The button is now disabled
+                onboardButton.disabled = false;
+            } else {
+                //If it is installed we change our button text
+                onboardButton.innerText = 'Click to Connect Metamask';
+                console.log("metamask installed");
+                onboardButton.addEventListener('click', () => {
+                    getAccount();
+                    onboardButton.innerText = "Web 3 Connected";
+
+                });
+            }
+        };
+
+        const initialize = () => {
+            MetaMaskClientCheck();
+        };
+
+        window.addEventListener('DOMContentLoaded', initialize);
+
+        async function getAccount() {
+            const accounts = await ethereum.request({
+                method: 'eth_requestAccounts'
+            });
+            account = accounts[0];
+            showWallet.innerHTML = "<b>Connected Wallet :: " + account + "</b>";
+
+            icryptoMailyContract = new web3.eth.Contract(icryptoMailyAbi, icryptoMailyAddress);
+        }
+
+        //We create a new MetaMask onboarding object to use in our app
+        //const onboarding = new MetaMaskOnboarding({ forwarderOrigin });
+
+        //This will start the onboarding proccess
+        const onClickInstall = () => {
+            onboardButton.innerText = 'Onboarding in progress';
+            onboardButton.disabled = true;
+            //On this object we have startOnboarding which will start the onboarding process for our end user
+            onboarding.startOnboarding();
+        };
+
+        const onClickConnect = async() => {
+            try {
+                // Will open the MetaMask UI
+                // You should disable this button while the request is pending!
+                await ethereum.request({
+                    method: 'eth_requestAccounts'
+                });
+            } catch (error) {
+                console.error(error);
+            }
+        };
+
+        var currentMessageAddress;
+        var currentMessageContract;
+
+        var currentPouchAddress;
+        var currentPouchContract;
+
+        createMessageButton.addEventListener('click', createMessage);
+
+        async function createMessage() {
+            console.log("account : " + account);
+            icryptoMailyContract.methods.createMessage().send({
+                    from: account
+                })
+                .then(function(result) {
+                    console.log(result);
+                })
+                .then(function(result) {
+                    icryptoMailyContract.methods.getDrafts().call({
+                            from: account
+                        })
+                        .then(function(result) {
+                            console.log(result);
+                            currentMessageAddress = result[result.length - 1];
+                            console.log(currentMessageAddress);
+                            showMessageAddress.innerText = "Message Address :: " + currentMessageAddress;
+                            currentMessageContract = new web3.eth.Contract(icmWriteMessageAbi, currentMessageAddress);
+                        });;
+                });
+
+        }
+
+        createPouchButton.addEventListener('click', createPouch);
+
+        async function createPouch() {
+            currentMessageContract.methods.createPouch(pouchName, coinAddressByCoin(pouchDenomination), pouchDenomination).send({
+                    from: account
+                })
+                .then(function(result) {
+                    console.log(result);
+                })
+                .then(function(result) {
+                    currentMessageContract.methods.getPouchList().call({
+                            from: account
+                        })
+                        .then(function(result) {
+                            currentPouchAddress = result[result.length - 1];
+                            showPouchAddress.innerText = "Pouch Address :: " + currentPouchAddress;
+                            currentPouchContract = new web3.eth.Contract(icmPouchAbi, currentPouchAddress);
+                            showPouchDenomination = pouchDenomination;
+                            pouchDenomination.disable;
+                            pouchLiquidityProvider.disable;
+                            pouchName.disable;
+                        });
+                });
+        }
+
+        approvePouchButton.addEventListener('click', approvePouchCoin);
+
+        async function approvePouchCoin() {
+            var erc20 = new web3.eth.contract(ierc20Abi, coinAddressByCoin.get(pouchCoinSelect.value));
+            erc20.approve(currentPouchAddress, 99999999999999999999999999);
+            approvePouchButton.disable;
+            pouchCoinSelect.disable;
+        }
+
+        async function addFundsToPouch() {
+            var coin = pouchCoinSelect.value;
+            var funds = pouchAmount.value;
+            if(coin == "ETH") {
+                currentPouchContract.methods.storeFunds(funds,erc20).send({from : account, value : funds})
+                .then(function(result){
+                    console.log(result);
+                    showPouchTotal.innerText = result;
+                });
+            }
+            else {
+                erc20 = coinAddressByCoin.get(coin);
+                currentPouchContract.methods.storeFunds(funds,erc20).send({from : account})
+                .then(function(result){
+                    console.log(result);
+                    showPouchTotal.innerText = result;
+                });
+            }
+
+        }
+
+
+        attachPouchButton.addEventListener('click', attachPouch);
+
+        async function attachPouch() {
+            currentMessageContract.methods.addPouch(currentPouchAddress).send({
+                    from: account
+                })
+                .then(function(result) {
+                    showPouchAddress = null;
+                    var row = attachedPouchTable.insertRow();
+
+                    var name = row.insertCell();
+                    var nameText = document.createTextNode(pouchName);
+                    name.appendChild(nameText);
+
+                    var address = row.insertCell();
+                    var addressText = document.createTextNode(currentPouchAddress);
+                    address.appendChild(addressText);
+
+                    var value = row.insertCell();
+                    var valueText = document.createTextNode(pouchAmount);
+                    value.appendChild(valueText);
+
+                    var coin = row.insertCell();
+                    var coinText = document.createTextNode(pouchCoinSelect.value);
+                    coin.appendChild(coinText);
+
+                    pouchDenomination.enable;
+                    pouchLiquidityProvider.enable;
+                    pouchName.enable;
+                    pouchName.reset
+                    pouchLiquidityProvider.reset;
+                    pouchDenomination.reset;
+
+                });
+
+        }
+
+        uploadAndAttachButton.addEventListener('click', attachFile);
+
+        async function attachFile() {
+
+            var file = attachSelectButton.files[0];
+            console.log(file);
+
+            console.log("attachment : " + file);
+
+            console.log("attachment name : " + file.name);
+
+            var ipfsHash =  await ipfsUploadFile(file);
+
+            console.log("ipfs hash : " + ipfsHash);
+
+            attachSelectButton.reset = "";
+
+        }
+
+
+        console.log("send button " + sendButton);
+        sendButton.addEventListener('click', sendMail);
+
+        async function sendMail() {
+
+            var delta = quill.root.innerHTML;
+
+            console.log("delta :: " + delta);
+
+            console.log(delta);
+
+
+
+            var ipfsMessageHash = await ipfsUploadSendData(delta);
+
+            console.log("message hash :: " + ipfsMessageHash);
+        }
+
+        async function ipfsUploadFile(file) {
+            var data ;
+            console.log("file: " + file);
+            var reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = async function() {
+                console.log(reader.result);
+                var ipfsHash = await ipfsUploadData(reader.result);
+                console.log("upload hash : " + ipfsHash);
+
+                var row = attachmentTable.insertRow();
+                var name = row.insertCell();
+                var nameText = document.createTextNode(file.name);
+                name.appendChild(nameText);
+
+                var hash = row.insertCell();
+                var hashText = document.createTextNode(ipfsHash);
+                hash.appendChild(hashText);
+                currentMessageContract.methods.addAttachment(file.name, ipfsHash).send({
+                        from: account
+                    })
+                    .then(function(result) {
+                        console.log(result);
+
+                    });
+                return hash;
+            };
+            reader.onerror = function() {
+                console.log(reader.error);
+            };
+
+        }
+
+        async function ipfsUploadData(data) {
+            /* Create an instance of the client */
+
+            console.log("data load :- " + data);
+
+            console.log(data);
+
+            /* upload the file */
+            const added = await ipfs.add(data);
+
+            console.log("added :- " + added);
+
+            var hash = added[0].hash;
+
+
+            return hash;
+        }
+
+        async function ipfsUploadSendData(data) {
+            /* Create an instance of the client */
+
+            console.log("data load :- " + data);
+
+            console.log(data);
+
+            /* upload the file */
+            const added = await ipfs.add(data);
+
+            console.log("added :- " + added);
+
+            var ipfsMessageHash = added[0].hash;
+
+            console.log("ipfsMessageHash :: " + ipfsMessageHash);
+
+            console.log(recipient.value);
+
+            currentMessageContract.methods.setMessage(recipient.value, subject.value, ipfsMessageHash).send({
+                    from: account
+                })
+                .then(function(result) {
+                    icryptoMailyContract.methods.sendMessage(currentMessageAddress).send({
+                            from: account
+                        })
+                        .then(function(result) {
+                            console.log(result);
+                            postSendCleanUp();
+                            console.log("sent ");
+                        });
+                });
+
+            return ipfsMessageHash;
+        }
+
+        function postSendCleanUp() {
+            console.log("doing UI cleanup");
+
+
+            console.log("UI cleanup completed");
+        }
+    </script>
+
+</body>
+
+</html>
