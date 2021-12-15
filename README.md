@@ -1,8 +1,9 @@
 # cryptomaily
 This is the Crypto Maily repository 
-|-----!------!
-!DEMO UI: ! https://super-waterfall-7327.on.fleek.co/ !
-!YOUTUBE: ! https://www.youtube.com/watch?v=oquos7Jd0iI&t=3s!
+|     |      |
+|-----|------|
+|DEMO UI: | https://super-waterfall-7327.on.fleek.co/ |
+|YOUTUBE: | https://www.youtube.com/watch?v=oquos7Jd0iI&t=3s|
 
 Below is the table of Crypto MAily deployments 
 |Chain Network |	Component |	Version| Address | Admin |
